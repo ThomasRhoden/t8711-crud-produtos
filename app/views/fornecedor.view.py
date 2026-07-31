@@ -20,7 +20,6 @@ class Fornecedor_View:
         self.root.title("CRUD de Fornecedores")
         self.root.geometry("800x600")
         self.root.resizable(False, False)
-  
 
     def criar_componentes(self):
         self.lbl_titulo = tk.Label(
@@ -191,7 +190,7 @@ class Fornecedor_View:
             column = 1,
             padx = 5,
             pady = 5
-        )        
+        )
         self.btn_excluir = tk.Button(
             self.frm_botoes,
             text = "Excluir",
@@ -202,7 +201,7 @@ class Fornecedor_View:
             column = 2,
             padx = 5,
             pady = 5
-        )   
+        )
         self.btn_fechar = tk.Button(
             self.frm_botoes,
             text = "Fechar",
@@ -213,7 +212,8 @@ class Fornecedor_View:
             column = 3,
             padx = 5,
             pady = 5
-        )                 
+        )
+
     def configurar_treeview(self):
         pass
     def configurar_eventos(self):
