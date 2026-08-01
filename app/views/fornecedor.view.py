@@ -11,8 +11,9 @@ from tkinter import ttk
 
 
 class Fornecedor_View:
-    def __init__(self, root):
+    def __init__(self, root, controller):
         self.root = root
+        self.controller = controller
         self.configurar_janela()
         self.criar_componentes()
         self.configurar_treeview()
@@ -277,7 +278,25 @@ class Fornecedor_View:
         )
 
     def configurar_eventos(self):
-        pass 
+        self.btn_novo.config(
+            command = self.controller.new
+        )
+        self.btn_salvar.config(
+            command = self.controller.save
+        )
+        self.btn_alterar.config(
+            command = self.controller.update
+        )
+        self.btn_excluir.config(
+            command = self.controller.delete
+        )
+
+    def limpar_campos(self):
+        self.txt_id.delete(0, tk.END)
+        self.txt_razao_social.delete(0, tk.END)
+        self.txt_nome_fantasia.delete(0, tk.END)
+        self.txt_cnpj.delete(0, tk.END)
+        self.txt_sla.delete(0, tk.END)
 
     def iniciar(self):
         self.root.mainloop()
