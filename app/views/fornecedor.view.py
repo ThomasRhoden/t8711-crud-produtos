@@ -6,6 +6,8 @@ from app.models.fornecedor import Fornecedor
 
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
+
 
 
 class Fornecedor_View:
@@ -20,6 +22,7 @@ class Fornecedor_View:
         self.root.title("CRUD de Fornecedores")
         self.root.geometry("800x600")
         self.root.resizable(False, False)
+  
 
     def criar_componentes(self):
         self.lbl_titulo = tk.Label(
@@ -44,7 +47,7 @@ class Fornecedor_View:
             columnspan=4,
             padx = 10,
             pady = 5,
-            sticky = "w"
+            sticky = "ew"
         )
         self.lbl_id = tk.Label(
             self.frm_dados,
@@ -158,16 +161,16 @@ class Fornecedor_View:
             sticky = "w"
         )
         self.frm_botoes = tk.Frame(
-            self.root,
+            self.frm_dados,
             border = 2,
             relief = "groove"
         )
         self.frm_botoes.grid(
-            row = 2,
+            row = 4,
             column = 0,
             padx = 10,
             pady = 5,
-            columnspan = 4
+            columnspan = 4,
         )
         self.btn_novo = tk.Button(
             self.frm_botoes,
@@ -180,6 +183,17 @@ class Fornecedor_View:
             padx = 5,
             pady = 5
         )
+        self.btn_salvar = tk.Button(
+            self.frm_botoes,
+            text = "Salvar",
+            width = 15
+        )
+        self.btn_salvar.grid(
+            row = 0,
+            column = 1,
+            padx = 5,
+            pady = 5
+        )        
         self.btn_alterar = tk.Button(
             self.frm_botoes,
             text = "Alterar",
@@ -187,10 +201,10 @@ class Fornecedor_View:
         )
         self.btn_alterar.grid(
             row = 0,
-            column = 1,
+            column = 2,
             padx = 5,
             pady = 5
-        )
+        )        
         self.btn_excluir = tk.Button(
             self.frm_botoes,
             text = "Excluir",
@@ -198,10 +212,10 @@ class Fornecedor_View:
         )
         self.btn_excluir.grid(
             row = 0,
-            column = 2,
+            column = 3,
             padx = 5,
             pady = 5
-        )
+        )   
         self.btn_fechar = tk.Button(
             self.frm_botoes,
             text = "Fechar",
@@ -209,13 +223,59 @@ class Fornecedor_View:
         )
         self.btn_fechar.grid(
             row = 0,
-            column = 3,
+            column = 4,
             padx = 5,
             pady = 5
         )
+        self.tbl_fornecedores = ttk.Treeview(
+            self.root,
+            height = 10
+        )
+        self.tbl_fornecedores.grid(
+            row = 3,
+            column = 0,
+            columnspan = 4,
+            padx = 10,
+            pady = 10,
+            sticky = "nsew"
+        )
 
     def configurar_treeview(self):
-        pass
+        self.tbl_fornecedores["columns"] = (
+            "id",
+            "razao_social",
+            "cnpj"
+        )
+        self.tbl_fornecedores.column(
+            "#0",
+            width = 0,
+            stretch = "False"
+        )
+        self.tbl_fornecedores.column(
+            "id",
+            width = 10
+        )
+        self.tbl_fornecedores.column(
+            "razao_social",
+            width = 50
+        )
+        self.tbl_fornecedores.column(
+            "cnpj",
+            width = 20
+        )
+        self.tbl_fornecedores.heading(
+            "id",
+            text = "ID"
+        )
+        self.tbl_fornecedores.heading(
+            "razao_social",
+            text = "Razão Social"
+        )
+        self.tbl_fornecedores.heading(
+            "cnpj",
+            text = "CNPJ"
+        )
+
     def configurar_eventos(self):
         pass 
 
