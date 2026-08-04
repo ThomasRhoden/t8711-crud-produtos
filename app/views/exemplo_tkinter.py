@@ -44,6 +44,7 @@ class Janela_Exemplo:
             row = 2,
             column = 0
         )
+
         self.lbl_nome = tk.Label(
             self.frm_dados,
             text = "Nome:"
@@ -85,12 +86,14 @@ class Janela_Exemplo:
             text = "Printar o nome",
             command = self.printar
         )
+
         self.btn_escrever_nome.grid(
             row = 3,
             column = 0,
             padx = 10,
             pady = 5
         )
+
         self.btn_avaliar_idade = tk.Button(
             self.frm_botoes,
             text = "Avaliar idade",
@@ -100,7 +103,6 @@ class Janela_Exemplo:
             row = 3,
             column = 1
         )
-
     def printar(self):
         print(self.txt_nome.get())
 
@@ -123,7 +125,6 @@ class Janela_Exemplo:
             "Fedelho!!!!"
         )
         return
-    
     def iniciar(self):
         self.janela.mainloop()
 
