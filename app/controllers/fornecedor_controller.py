@@ -5,6 +5,8 @@ class Fornecedor_Controller:
     def __init__(self, dao, view):
         self.dao = dao
         self.view = view
+        self.fornecedor_selecionado = None
+
 
     def new(self):
         self.view.limpar_campos()
@@ -12,7 +14,13 @@ class Fornecedor_Controller:
     def save(self):
         try:
             razao_social, nome_fantasia, cnpj, sla_atendimento = self.view.ler_dados_fornecedor()
-            fornecedor = Fornecedor(None,razao_social, nome_fantasia, cnpj, sla_atendimento)
+            fornecedor = Fornecedor(
+                    None,
+                    razao_social, 
+                    nome_fantasia, 
+                    cnpj, 
+                    sla_atendimento
+                )
             self.dao.save(fornecedor)
             self.get_all()
             self.view.exibir_mensagem("Fornecedor cadastrado com sucesso!")
@@ -32,9 +40,9 @@ class Fornecedor_Controller:
             self.view.preencher_campos(
                 self.fornecedor_selecionado
             )
-        except IndexError:
-            pass
 
+        except IndexError:
+            pass        
     def update(self):
         try:
             if self.fornecedor_selecionado is None:
@@ -74,11 +82,16 @@ class Fornecedor_Controller:
                 break
             elif opcao == 1:
                 self.save()
+            
             elif opcao == 2:
                 self.get_all()
+            
             elif opcao == 3:
                 self.update()
+                
             elif opcao == 4:
                 self.delete()
+                
             else:
                 self.view.exibir_mensagem("Opção inválida. Tente novamente.", False)
+                
