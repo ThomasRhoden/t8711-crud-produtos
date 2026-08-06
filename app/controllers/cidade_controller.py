@@ -1,4 +1,3 @@
-import os
 from app.models.cidade import Cidade
 
 
@@ -9,26 +8,33 @@ class Cidade_Controller:
         self.estado_dao = estado_dao
         self.view = view
 
+    def carregar_estados(self):
+
+        estados = self.estado_dao.get_all()
+
+        if hasattr(self.view, "preencher_estados"):
+            self.view.preencher_estados(estados)
+
+    def new(self):
+
+        self.view.limpar_campos()
+
     def save(self):
 
         try:
 
-            estados = self.estado_dao.get_all()
+            nome, estado_id = self.view.ler_dados_cidade()
 
-            if not estados:
-
+            if not nome.strip():
                 self.view.exibir_mensagem(
-                    "Cadastre um estado antes de cadastrar cidades.",
+                    "Informe o nome da cidade.",
                     False
                 )
-
                 return
 
-            self.view.exibir_estados(estados)
-
-            id_estado = int(self.view.ler_estado())
-
-            estado = self.estado_dao.get_by_id(id_estado)
+            estado = self.estado_dao.get_by_id(
+                int(estado_id)
+            )
 
             if estado is None:
 
@@ -39,8 +45,6 @@ class Cidade_Controller:
 
                 return
 
-            nome = self.view.ler_dados_cidade()
-
             cidade = Cidade(
                 None,
                 nome,
@@ -49,21 +53,18 @@ class Cidade_Controller:
 
             self.dao.save(cidade)
 
+            self.get_all()
+
+            self.view.limpar_campos()
+
             self.view.exibir_mensagem(
                 "Cidade cadastrada com sucesso!"
             )
 
-        except ValueError:
+        except Exception as e:
 
             self.view.exibir_mensagem(
-                "Entrada inválida.",
-                False
-            )
-
-        except KeyboardInterrupt:
-
-            self.view.exibir_mensagem(
-                "Operação cancelada.",
+                str(e),
                 False
             )
 
@@ -73,19 +74,43 @@ class Cidade_Controller:
 
         self.view.exibir_cidades(cidades)
 
-        self.view.aguardar_entrada()
+    def selecionar_cidade(self, event):
+
+        try:
+
+            id_cidade = self.view.get_id_selecionado()
+
+            cidade = self.dao.get_by_id(
+                int(id_cidade)
+            )
+
+            if cidade:
+
+                self.view.preencher_campos(
+                    cidade
+                )
+
+        except Exception:
+            pass
 
     def update(self):
 
         try:
 
-            cidades = self.dao.get_all()
+            id_cidade = self.view.txt_id.get()
 
-            self.view.exibir_cidades(cidades)
+            if not id_cidade:
 
-            id_cidade = int(self.view.ler_id())
+                self.view.exibir_mensagem(
+                    "Selecione uma cidade.",
+                    False
+                )
 
-            cidade = self.dao.get_by_id(id_cidade)
+                return
+
+            cidade = self.dao.get_by_id(
+                int(id_cidade)
+            )
 
             if cidade is None:
 
@@ -96,16 +121,10 @@ class Cidade_Controller:
 
                 return
 
-            estados = self.estado_dao.get_all()
-
-            self.view.exibir_estados(estados)
-
-            id_estado = self.view.ler_estado(
-                cidade.estado.id
-            )
+            nome, estado_id = self.view.ler_dados_cidade()
 
             estado = self.estado_dao.get_by_id(
-                int(id_estado)
+                int(estado_id)
             )
 
             if estado is None:
@@ -117,10 +136,6 @@ class Cidade_Controller:
 
                 return
 
-            nome = self.view.ler_dados_cidade(
-                cidade
-            )
-
             cidade.atualizar_dados(
                 nome,
                 estado
@@ -128,14 +143,16 @@ class Cidade_Controller:
 
             self.dao.update(cidade)
 
+            self.get_all()
+
             self.view.exibir_mensagem(
                 "Cidade atualizada com sucesso!"
             )
 
-        except ValueError as e:
+        except Exception as e:
 
             self.view.exibir_mensagem(
-                f"Erro: {str(e)}",
+                str(e),
                 False
             )
 
@@ -143,15 +160,29 @@ class Cidade_Controller:
 
         try:
 
-            cidades = self.dao.get_all()
+            id_cidade = self.view.txt_id.get()
 
-            self.view.exibir_cidades(cidades)
+            if not id_cidade:
 
-            id_cidade = int(self.view.ler_id())
+                self.view.exibir_mensagem(
+                    "Selecione uma cidade.",
+                    False
+                )
 
-            sucesso = self.dao.delete(id_cidade)
+                return
+
+            if not self.view.confirmar_exclusao():
+                return
+
+            sucesso = self.dao.delete(
+                int(id_cidade)
+            )
 
             if sucesso:
+
+                self.get_all()
+
+                self.view.limpar_campos()
 
                 self.view.exibir_mensagem(
                     "Cidade excluída com sucesso!"
@@ -164,39 +195,9 @@ class Cidade_Controller:
                     False
                 )
 
-        except ValueError:
+        except Exception as e:
 
             self.view.exibir_mensagem(
-                "ID inválido.",
+                str(e),
                 False
             )
-
-    def inicializar_sistema(self):
-
-        while True:
-
-            os.system("cls" if os.name == "nt" else "clear")
-
-            opcao = self.view.renderizar_menu()
-
-            if opcao == 0:
-                break
-
-            elif opcao == 1:
-                self.save()
-
-            elif opcao == 2:
-                self.get_all()
-
-            elif opcao == 3:
-                self.update()
-
-            elif opcao == 4:
-                self.delete()
-
-            else:
-
-                self.view.exibir_mensagem(
-                    "Opção inválida.",
-                    False
-                )
