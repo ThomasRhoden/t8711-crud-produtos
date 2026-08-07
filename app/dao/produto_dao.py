@@ -22,9 +22,9 @@ class Produto_DAO(DAO):
             conexao.commit()
             produto.id = cursor.lastrowid
             return produto
-        except Exception as e:
+        except Exception:
             conexao.rollback()
-            raise e
+            raise
         finally:
             self.desconectar(cursor, conexao)
     
@@ -58,11 +58,9 @@ class Produto_DAO(DAO):
                     )
                 )
             return produtos
-        except Exception as e:
-            raise e
         finally:
             self.desconectar(cursor, conexao)
-    
+
     def get_by_id(self, id):
         conexao, cursor = self.conectar()
         try:
@@ -80,9 +78,10 @@ class Produto_DAO(DAO):
                     """        
             cursor.execute(sql,(id,))
             registro = cursor.fetchone()
-            fornecedor = self._fornecedor_dao.get_by_id(registro[4])
+            
             if registro is None:
                 return None
+            fornecedor = self._fornecedor_dao.get_by_id(registro[4])
             return Produto(
                 registro[0],
                 registro[1],
@@ -90,11 +89,8 @@ class Produto_DAO(DAO):
                 registro[3],
                 fornecedor
             )
-        except Exception as e:
-            raise e
         finally:
             self.desconectar(cursor, conexao)
-
 
     def update(self, produto):
         conexao, cursor = self.conectar()
@@ -118,9 +114,9 @@ class Produto_DAO(DAO):
             conexao.commit()
             sucesso = cursor.rowcount > 0
             return sucesso
-        except Exception as e:
+        except Exception:
             conexao.rollback()
-            raise e
+            raise
         finally:
             self.desconectar(cursor, conexao)
     
@@ -135,8 +131,8 @@ class Produto_DAO(DAO):
             conexao.commit()
             sucesso = cursor.rowcount > 0
             return sucesso
-        except Exception as e:
+        except Exception:
             conexao.rollback()
-            raise e
+            raise
         finally:
             self.desconectar(cursor, conexao)
